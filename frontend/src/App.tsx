@@ -10,6 +10,9 @@ import MetricsTable from "./components/MetricsTable";
 import SkyView3D from "./components/SkyView3D";
 
 const MAX_SITES = 3;
+const DEMO_SITE_IDS = ["MMA02", "SP01", "A11"];   // two polar sites + Apollo 11 for contrast
+const DEMO_START = "2026-11-14";
+const DEMO_END = "2026-12-14";
 
 function plusDays(iso: string, days: number) {
   const d = new Date(iso + "T00:00:00Z");
@@ -39,14 +42,14 @@ export default function App() {
       .catch(() => setError("Cannot reach the backend. Is it running on port 8000?"));
   }, []);
 
-  async function run(newStart = start, newEnd = end) {
-    if (selected.length === 0) return setError("Choose at least one site");
+  async function run(newStart = start, newEnd = end, chosen = selected) {
+    if (chosen.length === 0) return setError("Choose at least one site");
     if (newEnd <= newStart) return setError("End date must be after start date");
     setLoading(true);
     setError("");
     try {
       const data = await getVisibility({
-        sites: selected, start: newStart, end: newEnd,
+        sites: chosen, start: newStart, end: newEnd,
         step_minutes: stepMinutes, earth_mask_deg: mask,
       });
       setResult(data);
@@ -57,6 +60,15 @@ export default function App() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // One click: the comparison we show in the presentation.
+  function runDemo() {
+    const demo = DEMO_SITE_IDS.map((id) => sites.find((s) => s.id === id)).filter((s): s is Site => !!s);
+    setSelected(demo);
+    setStart(DEMO_START);
+    setEnd(DEMO_END);
+    run(DEMO_START, DEMO_END, demo);
   }
 
   // "What if the landing slips?" - move both dates and run again.
@@ -113,6 +125,9 @@ export default function App() {
             </label>
             <button className="primary" onClick={() => run()} disabled={loading}>
               {loading ? "Calculating…" : "Compare sites"}
+            </button>
+            <button className="demo" onClick={runDemo} disabled={loading || sites.length === 0}>
+              ★ Demo comparison
             </button>
             <div className="row">
               <button onClick={() => shift(-7)} disabled={loading}>◀ 1 week earlier</button>

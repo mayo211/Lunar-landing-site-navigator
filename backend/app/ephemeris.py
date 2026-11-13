@@ -66,11 +66,20 @@ def fetch_az_el(body: str, lat: float, lon: float, height_km: float,
         "CSV_FORMAT": "'YES'",
     }
     try:
-        response = requests.get(HORIZONS_URL, params=params, timeout=HORIZONS_TIMEOUT_S)
+        # (connect timeout, read timeout): fail fast when there is no internet
+        response = requests.get(HORIZONS_URL, params=params,
+                                timeout=(10, HORIZONS_TIMEOUT_S))
         response.raise_for_status()
         payload = response.json()
+    except (requests.ConnectionError, requests.Timeout) as exc:
+        print(f"[ephemeris] no connection to JPL Horizons: {exc}")
+        raise EphemerisError(
+            "No connection to NASA JPL Horizons. Check the internet and try again. "
+            "Sites and dates that were loaded before still work offline.") from exc
     except (requests.RequestException, ValueError) as exc:
-        raise EphemerisError(f"Could not reach JPL Horizons: {exc}") from exc
+        print(f"[ephemeris] Horizons request failed: {exc}")
+        raise EphemerisError("NASA JPL Horizons returned an error. "
+                             "Try again in a minute.") from exc
 
     if "result" not in payload:
         raise EphemerisError(f"Horizons error: {payload}")

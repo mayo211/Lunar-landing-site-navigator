@@ -34,6 +34,23 @@ export default function PolarMap({ sites, selected, onPick }: Props) {
 
   const visible = [...sites, ...selected.filter((s) => !s.id)].filter((s) => s.lat <= EDGE_LAT);
 
+  // Labels for the selected sites, pushed down when two would overlap.
+  const labels = selected
+    .filter((s) => s.lat <= EDGE_LAT)
+    .map((s) => ({ key: siteKey(s), text: s.id ?? "custom", ...toXY(s.lat, s.lon) }))
+    .sort((a, b) => a.y - b.y)
+    .map((l) => ({ ...l, lx: l.x + 9, ly: l.y + 4, moved: false }));
+  for (let i = 1; i < labels.length; i++) {
+    for (let j = 0; j < i; j++) {
+      const a = labels[j];
+      const b = labels[i];
+      if (Math.abs(a.lx - b.lx) < 48 && b.ly - a.ly < 13) {
+        b.ly = a.ly + 13;
+        b.moved = true;
+      }
+    }
+  }
+
   return (
     <div className="panel">
       <h2>South pole map <small>(click to add a site)</small></h2>
@@ -56,13 +73,18 @@ export default function PolarMap({ sites, selected, onPick }: Props) {
           const p = toXY(site.lat, site.lon);
           const index = selected.findIndex((s) => siteKey(s) === siteKey(site));
           return (
-            <g key={siteKey(site)}>
-              <circle cx={p.x} cy={p.y} r={index >= 0 ? 6 : 3.5}
-                fill={index >= 0 ? SITE_COLORS[index] : "#8b93a7"} stroke="#0d1220" strokeWidth={1} />
-              {index >= 0 && <text x={p.x + 8} y={p.y + 4} className="map-label">{site.id ?? "custom"}</text>}
-            </g>
+            <circle key={siteKey(site)} cx={p.x} cy={p.y} r={index >= 0 ? 6 : 3.5}
+              fill={index >= 0 ? SITE_COLORS[index] : "#8b93a7"} stroke="#0d1220" strokeWidth={1}>
+              <title>{`${site.name} (${site.lat.toFixed(2)}, ${site.lon.toFixed(2)})`}</title>
+            </circle>
           );
         })}
+        {labels.map((l) => (
+          <g key={l.key}>
+            {l.moved && <line x1={l.x + 4} y1={l.y} x2={l.lx - 2} y2={l.ly - 4} className="leader" />}
+            <text x={l.lx} y={l.ly} className="map-label">{l.text}</text>
+          </g>
+        ))}
       </svg>
       <div className="hint">Rings every 2° of latitude. Sites north of 80°S are not drawn here.</div>
     </div>
