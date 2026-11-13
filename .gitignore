@@ -1,0 +1,9 @@
+node_modules/
+dist/
+__pycache__/
+.venv/
+backend/data/dem/*.TIF
+backend/data/dem/*.tif
+*.png
+.env
+.env.*

@@ -1,0 +1,14 @@
+[
+  {"id": "MMA02",  "name": "Malapert Massif",      "group": "artemis",       "lat": -86.0150, "lon": 3.3820},
+  {"id": "MMP02",  "name": "Mons Mouton Plateau",  "group": "artemis",       "lat": -84.8050, "lon": 24.8870},
+  {"id": "NR201",  "name": "Nobile Rim 2",         "group": "artemis",       "lat": -84.0540, "lon": 56.4810},
+  {"id": "PCB01",  "name": "Peak near Cabeus B",   "group": "artemis",       "lat": -83.7630, "lon": -69.9830},
+  {"id": "SP01",   "name": "Slater Plain",         "group": "artemis",       "lat": -87.4780, "lon": 124.5210},
+  {"id": "DGR201", "name": "de Gerlache Rim 2",    "group": "artemis",       "lat": -88.3890, "lon": -68.8650},
+  {"id": "IM2",    "name": "IM-2 Athena",          "group": "clps",          "lat": -84.7906, "lon": 29.1957},
+  {"id": "CH3",    "name": "Chandrayaan-3",        "group": "international", "lat": -69.373,  "lon": 32.319},
+  {"id": "CE4",    "name": "Chang'e-4 (far side)", "group": "international", "lat": -45.4446, "lon": 177.5991},
+  {"id": "A11",    "name": "Apollo 11",            "group": "apollo",        "lat": 0.67416,  "lon": 23.47314},
+  {"id": "A15",    "name": "Apollo 15",            "group": "apollo",        "lat": 26.13239, "lon": 3.63330},
+  {"id": "A17",    "name": "Apollo 17",            "group": "apollo",        "lat": 20.1911,  "lon": 30.7723}
+]
