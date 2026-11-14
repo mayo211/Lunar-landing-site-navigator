@@ -1,7 +1,8 @@
 // All calls to the backend live here.
 import type { Site, VisibilityRequest, VisibilityResponse } from "./types";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+// Developing (npm run dev): backend on port 8000. Online build: same address as the page.
+const API_URL = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? "http://localhost:8000" : "");
 
 async function readError(response: Response): Promise<string> {
   try {

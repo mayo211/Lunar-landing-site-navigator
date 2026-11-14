@@ -1,0 +1,9 @@
+**/node_modules
+**/.venv
+**/__pycache__
+frontend/dist
+frontend/package-lock.json
+backend/data/dem/*.TIF
+backend/data/dem/*.tif
+.git
+*.png

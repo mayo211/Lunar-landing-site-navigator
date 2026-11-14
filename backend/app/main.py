@@ -1,8 +1,11 @@
-"""The web API. Run from the backend folder:  uvicorn app.main:app --reload"""
+"""The web API. Run from the backend folder:  uvicorn app.main:app --reload
+When frontend/dist exists (the built website), it is served at "/" as well,
+so the whole app runs from one address (used for the online version)."""
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-from .config import MAX_SITES, MAX_TIME_STEPS
+from .config import BACKEND_DIR, MAX_SITES, MAX_TIME_STEPS
 from .dem import get_dem_stack
 from .ephemeris import EphemerisError
 from .models import VisibilityRequest
@@ -47,3 +50,9 @@ def visibility(request: VisibilityRequest):
     return {"start": request.start, "end": request.end,
             "step_minutes": request.step_minutes,
             "earth_mask_deg": request.earth_mask_deg, "sites": results}
+
+
+# Serve the built frontend (after the /api routes, so they keep priority).
+FRONTEND_DIST = BACKEND_DIR.parent / "frontend" / "dist"
+if FRONTEND_DIST.is_dir():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")

@@ -138,6 +138,26 @@ export default function App() {
         </aside>
 
         <main>
+          <details className="panel guide" open={!result}>
+            <summary>How to use this tool</summary>
+            <ol>
+              <li>Press <b>★ Demo comparison</b> for a ready example, or tick up to {MAX_SITES} sites
+                (or click the south pole map) and press <b>Compare sites</b>.</li>
+              <li>Read the comparison table: hover a <b>?</b> for what each number means. Best values are green.</li>
+              <li>Use <b>1 week earlier / later</b> to see how a schedule slip changes power and Earth contact.</li>
+              <li>Drag the time slider or click the timeline to see the Sun and Earth against the real horizon,
+                in the panorama and the 3D view.</li>
+            </ol>
+            <p><b>Works:</b> Sun and Earth positions from NASA JPL Horizons; real terrain horizons from NASA LOLA
+              elevation maps (60°S to the pole); sunlight, Earth contact, darkness and countdown metrics; site and
+              date comparison; panorama, timeline and 3D views.</p>
+            <p><b>Limitations:</b> sites north of 60°S use a flat horizon; new sites or dates need a live
+              connection to NASA Horizons (the demo dates are pre-loaded); the Sun-disk percentage is an estimate;
+              relay satellites and surface safety are not modelled yet.</p>
+            <p><b>Next:</b> validation against NASA Quickmap, relay-satellite contact windows, and a slope and
+              roughness safety layer.</p>
+          </details>
+
           {!result && !loading && (
             <div className="panel empty">
               Choose up to {MAX_SITES} sites and a date range, then press <b>Compare sites</b>.
